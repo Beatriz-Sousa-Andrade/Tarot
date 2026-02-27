@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Oráculo da Lua - Tiragem de Tarot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body class="min-h-screen overflow-x-hidden">
+    <!-- Background elements -->
+    <div class="fixed inset-0 bg-stars"></div>
+    <div class="fixed inset-0 bg-gradient"></div>
+    
+    <!-- Main content -->
+    <div class="relative z-10 w-full max-w-[100vw] overflow-x-hidden">
+        <!-- Header -->
+        <header class="border-b border-purple-900/30 bg-black/20 backdrop-blur-sm sticky top-0 z-50">
+            <div class="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2 sm:space-x-3">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center float flex-shrink-0">
+                            <span class="text-white text-lg sm:text-xl">✧</span>
+                        </div>
+                        <h1 class="title-font text-xl sm:text-2xl font-bold text-white glow-text truncate max-w-[180px] sm:max-w-none">
+                            Oráculo da Lua
+                        </h1>
+                    </div>
+                    
+                    <!-- Desktop Navigation -->
+                    <nav class="hidden md:flex space-x-4 lg:space-x-8">
+                        <button onclick="loadSpread('daily')" class="text-gray-300 hover:text-purple-400 transition-colors text-sm lg:text-base whitespace-nowrap">Carta do Dia</button>
+                        <button onclick="loadSpread('three')" class="text-gray-300 hover:text-purple-400 transition-colors text-sm lg:text-base whitespace-nowrap">Três Cartas</button>
+                        <button onclick="loadSpread('love')" class="text-gray-300 hover:text-purple-400 transition-colors text-sm lg:text-base whitespace-nowrap">Amor</button>
+                        <button onclick="loadSpread('celtic')" class="text-gray-300 hover:text-purple-400 transition-colors text-sm lg:text-base whitespace-nowrap">Cruz Celta</button>
+                    </nav>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuBtn" class="md:hidden text-white p-2 hover:bg-purple-900/30 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Mobile Navigation -->
+                <div id="mobileMenu" class="hidden mt-3 md:hidden">
+                    <div class="flex flex-col space-y-2 bg-purple-900/20 backdrop-blur-sm rounded-lg p-3 border border-purple-500/30">
+                        <button onclick="loadSpread('daily')" class="text-gray-300 hover:text-purple-400 transition-colors py-2.5 px-3 hover:bg-purple-900/30 rounded-lg text-left">Carta do Dia</button>
+                        <button onclick="loadSpread('three')" class="text-gray-300 hover:text-purple-400 transition-colors py-2.5 px-3 hover:bg-purple-900/30 rounded-lg text-left">Três Cartas</button>
+                        <button onclick="loadSpread('love')" class="text-gray-300 hover:text-purple-400 transition-colors py-2.5 px-3 hover:bg-purple-900/30 rounded-lg text-left">Amor</button>
+                        <button onclick="loadSpread('celtic')" class="text-gray-300 hover:text-purple-400 transition-colors py-2.5 px-3 hover:bg-purple-900/30 rounded-lg text-left">Cruz Celta</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="container mx-auto px-4 sm:px-6 py-8 sm:py-12 text-center">
+            <div class="max-w-3xl mx-auto">
+                <div class="mb-6 sm:mb-8 floating-crystal">
+                    <div class="crystal-ball mx-auto w-16 h-16 sm:w-20 sm:h-20"></div>
+                </div>
+                <h2 class="title-font text-3xl sm:text-4xl md:text-5xl text-white mb-3 sm:mb-4 px-2">
+                    Descubra os<br class="hidden xs:block">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">
+                        Mistérios do Tarot
+                    </span>
+                </h2>
+                <p class="text-gray-400 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
+                    Conecte-se com sua sabedoria interior através das cartas e encontre respostas para suas perguntas mais profundas.
+                </p>
+                
+                <!-- Question Input -->
+                <div class="max-w-xl mx-auto px-3 sm:px-0">
+                    <div class="relative flex flex-col sm:block">
+                        <input type="text" id="questionInput" placeholder="Faça uma pergunta ao tarot..." 
+                               class="w-full px-4 sm:px-6 py-3 sm:py-4 pr-[120px] sm:pr-32 bg-purple-900/20 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors text-sm sm:text-base">
+                        <button onclick="askQuestion()" class="sm:absolute right-2 top-2 w-full sm:w-auto mt-2 sm:mt-0 px-4 sm:px-6 py-2.5 sm:py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all text-sm sm:text-base font-medium">
+                            Perguntar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div class="text-center bg-purple-900/30 p-6 rounded-2xl backdrop-blur-md mx-4">
+                <div class="loading-spinner mb-4 w-12 h-12 sm:w-14 sm:h-14 border-4 mx-auto"></div>
+                <p class="text-purple-400 text-sm sm:text-base">Conectando com o místico...</p>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main id="mainContent" class="container mx-auto px-4 sm:px-6 py-6 sm:py-8 min-h-[300px]">
+            <!-- Cards will be dynamically inserted here -->
+        </main>
+
+        <!-- Search Section -->
+        <section class="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+            <div class="bg-purple-900/10 border border-purple-500/20 rounded-xl sm:rounded-lg p-5 sm:p-8">
+                <h3 class="title-font text-xl sm:text-2xl text-white mb-5 sm:mb-6 text-center">Buscar Significados</h3>
+                <div class="max-w-md mx-auto">
+                    <div class="relative flex flex-col sm:block">
+                        <input type="text" id="searchInput" placeholder="Ex: amor, trabalho, mudança..." 
+                               class="w-full px-4 sm:px-6 py-3 sm:py-3 pr-[100px] sm:pr-28 bg-black/30 border border-purple-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors text-sm sm:text-base">
+                        <div class="flex gap-2 mt-2 sm:absolute sm:right-2 sm:top-2 sm:mt-0">
+                            <button onclick="searchCards()" class="flex-1 sm:flex-none px-4 sm:px-4 py-2.5 sm:py-1.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm sm:text-base">
+                                Buscar
+                            </button>
+                            <button id="clearSearchBtn" onclick="clearSearch()" class="flex-1 sm:flex-none px-4 sm:px-3 py-2.5 sm:py-1.5 bg-purple-800/50 text-purple-300 rounded-lg hover:bg-purple-700 transition-colors text-sm sm:text-base hidden">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                    <div id="searchResults" class="mt-6"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="../static/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Erro - Portal Instável | Oráculo da Lua</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        @keyframes unstable {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            10% { transform: translate(-2px, 1px) rotate(-1deg); }
+            20% { transform: translate(2px, -1px) rotate(1deg); }
+            30% { transform: translate(-1px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -2px) rotate(1deg); }
+            50% { transform: translate(-2px, -1px) rotate(-1deg); }
+            60% { transform: translate(2px, 1px) rotate(0deg); }
+            70% { transform: translate(-1px, -2px) rotate(1deg); }
+            80% { transform: translate(1px, 2px) rotate(-1deg); }
+            90% { transform: translate(-2px, 0) rotate(0deg); }
+        }
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .error-unstable {
+            animation: unstable 0.5s ease-in-out infinite;
+        }
+        
+        .error-flicker {
+            animation: flicker 2s ease-in-out infinite;
+        }
+        
+        .crystal-error {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(79, 70, 229, 0.2));
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid rgba(239, 68, 68, 0.5);
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+        }
+        
+        .crystal-error::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-code {
+            font-family: 'Cinzel', serif;
+            font-size: 6rem;
+            line-height: 1;
+            background: linear-gradient(135deg, #ef4444, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        @media (max-width: 640px) {
+            .error-code {
+                font-size: 4rem;
+            }
+            
+            .crystal-error {
+                width: 70px;
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+    <!-- Background elements -->
+    <div class="fixed inset-0 bg-stars"></div>
+    <div class="fixed inset-0 bg-gradient"></div>
+    
+    <!-- Main content -->
+    <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-2xl w-full text-center">
+            <!-- Crystal ball instável -->
+            <div class="floating-crystal mb-6 flex justify-center">
+                <div class="crystal-error error-unstable"></div>
+            </div>
+            
+            <!-- Código do erro dinâmico via JavaScript -->
+            <div class="error-flicker mb-4">
+                <span class="error-code" id="errorCode">500</span>
+            </div>
+            
+            <!-- Título -->
+            <h1 class="title-font text-2xl sm:text-3xl md:text-4xl text-white mb-4">
+                Portal <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-purple-400">Instável</span>
+            </h1>
+            
+            <!-- Mensagem de erro -->
+            <div class="bg-purple-900/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-6 sm:p-8 mb-6">
+                <p class="text-gray-300 text-base sm:text-lg mb-4" id="errorMessage">
+                    As energias místicas estão turbulentas. O portal que você tentou acessar está temporariamente instável.
+                </p>
+                
+                <!-- Detalhes técnicos (opcional) -->
+                <div class="bg-black/30 rounded-lg p-3 mb-6 font-mono text-xs sm:text-sm text-left overflow-x-auto">
+                    <p class="text-purple-400 mb-1">🔮 Diagnóstico Místico:</p>
+                    <p class="text-gray-500" id="technicalDetails">Conexão interdimensional instável. Tente novamente em alguns instantes.</p>
+                </div>
+                
+                <!-- Ações -->
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="window.location.reload()" 
+                            class="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all transform hover:scale-105">
+                        <span>🔄</span> Tentar Novamente
+                    </button>
+                    <a href="/" 
+                       class="flex items-center justify-center gap-2 bg-purple-800/50 text-purple-300 px-6 py-3 rounded-lg hover:bg-purple-700 hover:text-white transition-all transform hover:scale-105 border border-purple-500/30">
+                        <span>🏠</span> Voltar ao Início
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Conselho -->
+            <p class="text-gray-500 text-sm italic">
+                "Até as estrelas mais brilhantes passam por momentos de instabilidade. Aguarde e tente novamente."
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Pega o código do erro da URL ou usa 500 como padrão
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorCode = urlParams.get('code') || '500';
+        const errorMessage = urlParams.get('message') || 'Erro interno no servidor';
+        
+        // Atualiza o código e mensagem
+        document.getElementById('errorCode').textContent = errorCode;
+        
+        // Mapeia códigos para mensagens amigáveis
+        const errorMessages = {
+            '400': 'Sua requisição mística foi mal interpretada.',
+            '401': 'Você não tem permissão para acessar este portal.',
+            '403': 'Este conhecimento está além do seu alcance atual.',
+            '404': 'O portal que você busca não existe nesta dimensão.',
+            '408': 'O tempo de conexão com o plano astral expirou.',
+            '429': 'Muitas tentativas de conexão. Ague um momento.',
+            '500': 'As energias místicas estão turbulentas.',
+            '502': 'O portal intermediário não responde.',
+            '503': 'O servidor místico está em manutenção.',
+            '504': 'O tempo de resposta do além se esgotou.'
+        };
+        
+        const friendlyMessage = errorMessages[errorCode] || 'Ocorreu um erro místico inesperado.';
+        document.getElementById('errorMessage').textContent = friendlyMessage;
+        
+        // Detalhes técnicos
+        document.getElementById('technicalDetails').textContent = 
+            `Código: ${errorCode} • Timestamp: ${new Date().toISOString()} • Conexão: ${navigator.onLine ? 'Online' : 'Offline'}`;
+        
+        // Se estiver offline, mostrar mensagem específica
+        if (!navigator.onLine) {
+            document.getElementById('errorMessage').textContent = 'Sua conexão com o plano terreno está instável.';
+            document.getElementById('errorCode').textContent = '🌙';
+        }
+    </script>
+</body>
+</html>

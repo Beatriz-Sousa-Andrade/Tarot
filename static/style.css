@@ -1,0 +1,740 @@
+/* style.css - Estilos místicos para o Tarot */
+
+/* Font families */
+.title-font {
+    font-family: 'Cinzel', serif;
+}
+
+/* Animações */
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 10px rgba(147, 51, 234, 0.5); }
+    50% { text-shadow: 0 0 20px rgba(147, 51, 234, 0.8); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes cardReveal {
+    from { 
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Background elements */
+.bg-stars {
+    background: #0a0a0f;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(147, 51, 234, 0.05) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(79, 70, 229, 0.05) 0%, transparent 30%);
+}
+
+.bg-gradient {
+    background: radial-gradient(circle at 50% 50%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+}
+
+/* Text effects */
+.glow-text {
+    animation: glow 3s ease-in-out infinite;
+}
+
+/* Floating elements */
+.float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Crystal Ball */
+.crystal-ball {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(79, 70, 229, 0.2));
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(147, 51, 234, 0.3);
+    box-shadow: 0 0 30px rgba(147, 51, 234, 0.3);
+}
+
+.crystal-ball::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), transparent 50%);
+    animation: rotate 20s linear infinite;
+}
+
+.crystal-ball::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(147, 51, 234, 0.2), transparent 70%);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(147, 51, 234, 0.3);
+    border-top-color: #9333ea;
+    border-radius: 50%;
+    animation: rotate 1s linear infinite;
+    margin: 0 auto;
+}
+
+/* Cards */
+.card {
+    background: linear-gradient(135deg, rgba(30, 27, 45, 0.9), rgba(20, 18, 30, 0.95));
+    border: 1px solid rgba(147, 51, 234, 0.2);
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    animation: cardReveal 0.5s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(147, 51, 234, 0.5);
+    box-shadow: 0 20px 30px -10px rgba(147, 51, 234, 0.3);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transition: left 0.5s ease;
+}
+
+.card:hover::before {
+    left: 100%;
+}
+
+.card.upright {
+    border-left: 4px solid #10b981;
+}
+
+.card.reversed {
+    border-left: 4px solid #ef4444;
+}
+
+/* Card header */
+.card-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(147, 51, 234, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+}
+
+.card-position {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.position-upright {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.position-reversed {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Card content */
+.card-content {
+    padding: 1rem;
+}
+
+.card-meaning {
+    color: #d1d5db;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.card-suit {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(147, 51, 234, 0.1);
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    color: #c084fc;
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    text-transform: uppercase;
+}
+
+/* Position badges */
+.position-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(147, 51, 234, 0.2);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: #c084fc;
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    margin-bottom: 0.5rem;
+}
+
+/* Interpretation text */
+.interpretation-text {
+    color: #9ca3af;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+    border-left: 3px solid #9333ea;
+    margin-top: 1rem;
+}
+
+/* Daily card special */
+.daily-card {
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(79, 70, 229, 0.2));
+    border: 2px solid rgba(147, 51, 234, 0.5);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Adicione estas classes ao seu style.css existente */
+
+/* Daily message styling */
+.daily-message {
+    color: #c084fc;
+    font-size: 1.1rem;
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: rgba(147, 51, 234, 0.1);
+    border-radius: 0.75rem;
+    border: 1px dashed rgba(147, 51, 234, 0.3);
+    line-height: 1.6;
+}
+
+/* Tooltip para informações adicionais */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 18, 30, 0.95);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 20;
+}
+
+/* Badge para tipo de carta */
+.card-type-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(147, 51, 234, 0.15);
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    color: #a78bfa;
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    margin-right: 0.5rem;
+}
+/* Search results */
+.search-result-item {
+    background: rgba(30, 27, 45, 0.9);
+    border: 1px solid rgba(147, 51, 234, 0.2);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.search-result-item:hover {
+    border-color: rgba(147, 51, 234, 0.5);
+    transform: translateX(5px);
+}
+
+/* Substitua a seção "Grid layouts" atual (linhas ~280-300) por: */
+
+/* Grid layouts - Versão Corrigida */
+.cards-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+/* Grid para 1 carta (Carta do Dia) */
+.cards-grid:has(> :nth-child(1):last-child) {
+    grid-template-columns: minmax(280px, 400px);
+}
+
+/* Grid para 2 cartas */
+.cards-grid:has(> :nth-child(2):last-child) {
+    grid-template-columns: repeat(2, minmax(260px, 350px));
+}
+
+/* Grid para 3 cartas */
+.cards-grid:has(> :nth-child(3):last-child) {
+    grid-template-columns: repeat(3, minmax(240px, 320px));
+}
+
+/* Grid para 4+ cartas (Cruz Celta) */
+.cards-grid:has(> :nth-child(n+4)) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Fallback para navegadores que não suportam :has() */
+@supports not (selector(:has(*))) {
+    .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    
+    /* Classe específica para Carta do Dia */
+    .cards-grid.single-card {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .cards-grid.single-card > * {
+        max-width: 400px;
+        width: 100%;
+    }
+    
+    /* Classe específica para 3 cartas */
+    .cards-grid.three-cards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    
+    .cards-grid.three-cards > * {
+        flex: 0 1 300px;
+        min-width: 260px;
+    }
+}
+
+/* Responsividade para tablets */
+@media (max-width: 768px) {
+    .cards-grid:has(> :nth-child(3):last-child) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .cards-grid:has(> :nth-child(3):last-child) > *:last-child {
+        grid-column: span 2;
+        max-width: 350px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .cards-grid:has(> :nth-child(2):last-child),
+    .cards-grid:has(> :nth-child(3):last-child) {
+        grid-template-columns: 1fr;
+    }
+    
+    .cards-grid:has(> :nth-child(3):last-child) > *:last-child {
+        grid-column: auto;
+    }
+}
+
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1f;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4c1d95;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6d28d9;
+}
+
+/* Selection styling */
+::selection {
+    background: rgba(147, 51, 234, 0.3);
+    color: white;
+}
+
+/* Focus styles */
+*:focus {
+    outline: 2px solid #9333ea;
+    outline-offset: 2px;
+}
+
+/* Error message */
+.error-message {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+/* Success message */
+.success-message {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid #10b981;
+    color: #10b981;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+/* Info box */
+.info-box {
+    background: rgba(147, 51, 234, 0.1);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    color: #d1d5db;
+    line-height: 1.6;
+}
+
+/* Stats cards */
+.stat-card {
+    background: rgba(30, 27, 45, 0.8);
+    border: 1px solid rgba(147, 51, 234, 0.2);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    border-color: rgba(147, 51, 234, 0.5);
+    transform: scale(1.02);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #c084fc;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #9ca3af;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Adicione ao seu CSS */
+.search-results {
+    max-height: 500px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #9f7aea #2d3748;
+}
+
+.search-results::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-results::-webkit-scrollbar-track {
+    background: #2d3748;
+    border-radius: 10px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+    background: #9f7aea;
+    border-radius: 10px;
+}
+
+.search-result-item {
+    transition: all 0.3s ease;
+}
+
+.search-result-item:hover {
+    transform: translateX(5px);
+}
+
+/* ===== CORREÇÕES DE RESPONSIVIDADE ===== */
+
+/* Ajustes de container */
+.container {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+    .container {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+/* Grid responsivo para cartas */
+
+
+/* Card improvements */
+.card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.card-content {
+    flex: 1;
+    padding: 1.25rem;
+}
+
+@media (max-width: 640px) {
+    .card-content {
+        padding: 1rem;
+    }
+    
+    .card-name {
+        font-size: 1.1rem;
+    }
+}
+
+/* Ajustes para títulos */
+.title-font {
+    word-break: break-word;
+}
+
+/* Ajustes para inputs em mobile */
+@media (max-width: 640px) {
+    input, button {
+        font-size: 16px !important; /* Previne zoom automático em iOS */
+    }
+    
+    .crystal-ball {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Resultados de busca responsivos */
+.search-results {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 640px) {
+    .search-result-item {
+        padding: 0.875rem;
+    }
+    
+    .search-result-item .text-3xl {
+        font-size: 2rem;
+    }
+}
+
+/* Ajustes para tablets */
+@media (min-width: 641px) and (max-width: 1023px) {
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .daily-card {
+        max-width: 500px;
+    }
+}
+
+/* Loading spinner responsivo */
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+}
+
+@media (max-width: 640px) {
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border-width: 3px;
+    }
+}
+
+/* Tooltip responsivo */
+@media (max-width: 640px) {
+    .tooltip-text {
+        white-space: normal;
+        width: 200px;
+        text-align: center;
+    }
+}
+
+/* Ajustes para a seção de pergunta */
+@media (max-width: 640px) {
+    #questionInput {
+        padding-right: 1rem;
+    }
+    
+    .question-bubble {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* Melhorias para telas muito pequenas */
+@media (max-width: 380px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .title-font.text-3xl {
+        font-size: 1.75rem;
+    }
+    
+    .card-header {
+        padding: 0.75rem;
+    }
+}
+
+/* Animações suaves para transições de tela */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.card {
+    animation: fadeInScale 0.3s ease-out;
+}
+
+/* Ajustes para landscape em mobile */
+@media (max-width: 896px) and (orientation: landscape) {
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+    
+    .crystal-ball {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Prevenção de overflow */
+img, svg, video, canvas, audio, iframe, embed, object {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Touch targets maiores para mobile */
+@media (max-width: 640px) {
+    button, 
+    [role="button"],
+    .search-result-item,
+    .suggestion-chip {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .suggestion-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* Ajustes para o modal de loading */
+#loading > div {
+    max-width: 90%;
+    width: auto;
+}
+
+/* Scrollbar fina para todos os dispositivos */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #9f7aea #2d3748;
+}
+
+/* Correção para o botão de menu mobile */
+#mobileMenuBtn {
+    touch-action: manipulation;
+}
+
+/* Ajustes para o gradiente de fundo em telas grandes */
+@media (min-width: 1536px) {
+    .bg-gradient {
+        background-size: 200% 200%;
+    }
+}

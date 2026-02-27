@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>404 - Página Não Encontrada | Oráculo da Lua</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Animações adicionais para a página de erro */
+        @keyframes floatError {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(5deg); }
+            75% { transform: translateY(5px) rotate(-5deg); }
+        }
+        
+        @keyframes glitch {
+            0%, 100% { transform: skew(0deg, 0deg); opacity: 1; }
+            20% { transform: skew(5deg, -2deg); opacity: 0.9; }
+            40% { transform: skew(-5deg, 2deg); opacity: 0.8; }
+            60% { transform: skew(3deg, -1deg); opacity: 0.9; }
+            80% { transform: skew(-3deg, 1deg); opacity: 1; }
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(147, 51, 234, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(147, 51, 234, 0.6); }
+        }
+        
+        @keyframes crystalRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-float {
+            animation: floatError 4s ease-in-out infinite;
+        }
+        
+        .error-glitch {
+            animation: glitch 3s ease-in-out infinite;
+        }
+        
+        .crystal-error {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(79, 70, 229, 0.2));
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid rgba(147, 51, 234, 0.5);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+        
+        .crystal-error::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 50%);
+            animation: crystalRotate 15s linear infinite;
+        }
+        
+        .crystal-error::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(147, 51, 234, 0.3), transparent 70%);
+        }
+        
+        .number-404 {
+            font-family: 'Cinzel', serif;
+            font-size: 8rem;
+            line-height: 1;
+            background: linear-gradient(135deg, #9333ea, #4f46e5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(147, 51, 234, 0.5);
+        }
+        
+        @media (max-width: 640px) {
+            .number-404 {
+                font-size: 5rem;
+            }
+            
+            .crystal-error {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+    <!-- Background elements -->
+    <div class="fixed inset-0 bg-stars"></div>
+    <div class="fixed inset-0 bg-gradient"></div>
+    
+    <!-- Main content -->
+    <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-3xl w-full text-center">
+            <!-- Crystal ball animado -->
+            <div class="floating-crystal mb-8 flex justify-center">
+                <div class="crystal-error error-float"></div>
+            </div>
+            
+            <!-- Número 404 com efeito glitch -->
+            <div class="error-glitch mb-4">
+                <span class="number-404">404</span>
+            </div>
+            
+            <!-- Título místico -->
+            <h1 class="title-font text-3xl sm:text-4xl md:text-5xl text-white mb-4">
+                Portal <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">Inexistente</span>
+            </h1>
+            
+            <!-- Mensagem de erro estilizada -->
+            <div class="bg-purple-900/20 backdrop-blur-sm border border-purple-500/30 rounded-xl p-6 sm:p-8 mb-8">
+                <p class="text-gray-300 text-base sm:text-lg mb-4">
+                    As cartas do tarot não revelaram esta página em suas visões. 
+                    O caminho que você buscou se perdeu nas névoas do destino.
+                </p>
+                
+                <!-- Conselho místico -->
+                <div class="bg-purple-800/30 border-l-4 border-purple-500 p-4 rounded-lg mb-6">
+                    <p class="text-purple-300 italic text-sm sm:text-base">
+                        "Nem todos os caminhos levam à sabedoria. Às vezes, o universo nos redireciona."
+                    </p>
+                </div>
+                
+                <!-- Sugestões de navegação -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                    <a href="/" 
+                       class="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-3 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all transform hover:scale-105">
+                        <span>🏠</span> Voltar ao Início
+                    </a>
+                    <button onclick="window.history.back()" 
+                            class="flex items-center justify-center gap-2 bg-purple-800/50 text-purple-300 px-4 py-3 rounded-lg hover:bg-purple-700 hover:text-white transition-all transform hover:scale-105 border border-purple-500/30">
+                        <span>↩️</span> Voltar à Página Anterior
+                    </button>
+                </div>
+                
+                <!-- Links rápidos -->
+                <div class="flex flex-wrap justify-center gap-2">
+                    <span class="text-gray-500 text-sm">Caminhos sugeridos:</span>
+                    <button onclick="window.location.href='/?spread=daily'" class="text-purple-400 hover:text-purple-300 text-sm underline decoration-purple-500/30 hover:decoration-purple-400 transition-all">
+                        Carta do Dia
+                    </button>
+                    <span class="text-gray-600">•</span>
+                    <button onclick="window.location.href='/?spread=three'" class="text-purple-400 hover:text-purple-300 text-sm underline decoration-purple-500/30 hover:decoration-purple-400 transition-all">
+                        Tirada de 3 Cartas
+                    </button>
+                    <span class="text-gray-600">•</span>
+                    <button onclick="window.location.href='/?spread=love'" class="text-purple-400 hover:text-purple-300 text-sm underline decoration-purple-500/30 hover:decoration-purple-400 transition-all">
+                        Tirada do Amor
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Rodapé místico -->
+            <div class="text-gray-500 text-xs sm:text-sm">
+                <p>⚡ A página que você procura está em outra dimensão ⚡</p>
+                <p class="mt-2 opacity-50">Erro 404 • Portal Desativado • Redirecionamento Místico</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Adiciona interatividade para as sugestões
+        document.querySelectorAll('[onclick*="window.location"]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                window.location.href = url;
+            });
+        });
+
+        // Efeito de digitação no subtítulo (opcional)
+        const title = document.querySelector('h1 span');
+        if (title) {
+            title.style.opacity = '0';
+            setTimeout(() => {
+                title.style.transition = 'opacity 2s';
+                title.style.opacity = '1';
+            }, 500);
+        }
+    </script>
+</body>
+</html>

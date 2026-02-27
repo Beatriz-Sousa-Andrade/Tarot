@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, request, send_from_directory, render_template, redirect
-#import flask_cors
 import requests
 import random
 import os

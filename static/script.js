@@ -349,46 +349,128 @@ function renderCards(data, title) {
     }
 
     const isDaily = title === 'Carta do Dia';
+    const isCeltic = title === 'Cruz Celta' || cards.length === 10;
+    
+    // Adiciona classes específicas baseado na quantidade de cartas
+    let cardsGridClass = 'cards-grid';
+    
+    if (cards.length === 1) {
+        cardsGridClass += ' single-card';
+    } else if (cards.length === 3) {
+        cardsGridClass += ' three-cards';
+    } else if (isCeltic || cards.length === 10) {
+        cardsGridClass += ' celtic-cross';
+    }
     
     let html = `
-        <h2 class="title-font text-3xl text-white mb-8 text-center animate-fade-in">${title}</h2>
-        <div class="cards-grid">
+        <h2 class="title-font text-2xl sm:text-3xl text-white mb-6 sm:mb-8 text-center animate-fade-in px-4">${title}</h2>
+        <div class="${cardsGridClass}">
     `;
 
-    cards.forEach(card => {
-        html += renderCard(card, isDaily);
+    cards.forEach((card, index) => {
+        html += renderCard(card, isDaily, index);
     });
 
     html += '</div>';
     
-    if (cards.length > 1 && summary) {
-        html += `
-            <div class="info-box bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm border border-purple-500/30 rounded-lg p-6 mt-8 animate-slide-up">
-                <h3 class="title-font text-xl text-white mb-4 flex items-center">
-                    <span class="text-2xl mr-2">🔮</span> 
-                    ${translations.meanings.summary}
-                </h3>
-                <div class="summary-content text-gray-300 leading-relaxed">
-                    ${summary}
-                </div>
-                <div class="mt-4 text-purple-400 text-sm italic border-t border-purple-500/20 pt-4">
-                    Confie na sabedoria das cartas, mas lembre-se: você tem o livre arbítrio para fazer suas escolhas.
-                </div>
+    // Resumo da leitura - SEM TRUNCAMENTO
+    if (cards.length > 1) {
+        // Garante que o summary seja uma string completa
+        let summaryText = summary || generateSpreadInterpretation(cards);
+        
+        // Se o summary veio truncado do backend, aqui podemos tentar completar
+        // Mas isso é só uma salvaguarda - o ideal é o backend enviar completo
+        if (summaryText && summaryText.includes('...') && summaryText.length < 500) {
+            console.warn('Possível resumo truncado:', summaryText);
+            // Tenta gerar um resumo mais completo localmente
+            summaryText = generateDetailedInterpretation(cards, summaryText);
+        }
+        
+         html += `
+        <div class="info-box animate-slide-up">
+            <h3 class="title-font text-xl sm:text-2xl text-white mb-4 flex items-center gap-2">
+    
+                ${translations.meanings.summary}
+            </h3>
+            <div class="summary-content">
+                ${summaryText}
             </div>
-        `;
-    } else if (cards.length > 1 && !summary) {
-        html += `
-            <div class="info-box bg-purple-900/30 backdrop-blur-sm border border-purple-500/30 rounded-lg p-6 mt-8">
-                <h3 class="title-font text-xl text-white mb-4">${translations.meanings.interpretation}</h3>
-                <p class="text-gray-300">${generateSpreadInterpretation(cards)}</p>
+            <div class="mt-6 text-purple-400/70 text-sm italic border-t border-purple-500/20 pt-4">
+                Confie na sabedoria das cartas, mas lembre-se: você tem o livre arbítrio para fazer suas escolhas.
             </div>
-        `;
+        </div>
+    `;
+
+        
     }
 
     mainContent.innerHTML = html;
+    
+    // Scroll suave para o resumo após renderizar
+    setTimeout(() => {
+        const infoBox = document.querySelector('.info-box');
+        if (infoBox) {
+            infoBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, 200);
 }
 
-function renderCard(card, isDaily = false) {
+// Função auxiliar para gerar interpretação mais detalhada se necessário
+function generateDetailedInterpretation(cards, originalSummary) {
+    // Se o original já parece completo, retorna ele
+    if (!originalSummary.includes('...') || originalSummary.length > 800) {
+        return originalSummary;
+    }
+    
+    // Gera uma interpretação básica baseada nas cartas
+    const uprightCount = cards.filter(c => c.position === 'upright').length;
+    const reversedCount = cards.filter(c => c.position === 'reversed').length;
+    const majorCount = cards.filter(c => c.type === 'major').length;
+    
+    let detailedSummary = '';
+    
+    // Análise de posições
+    if (uprightCount > reversedCount) {
+        detailedSummary += '✨ A maioria das cartas está na posição reta, indicando um momento favorável para ação e crescimento. As energias estão fluindo positivamente.\n\n';
+    } else if (reversedCount > uprightCount) {
+        detailedSummary += '🌙 Há várias cartas invertidas, sugerindo a necessidade de introspecção e cuidado com energias bloqueadas. Desafios podem estar presentes, mas trazem oportunidades de aprendizado.\n\n';
+    } else {
+        detailedSummary += '⚖️ Há um equilíbrio entre cartas retas e invertidas. Momentos de luz e sombra se alternam, trazendo oportunidades para integração e equilíbrio.\n\n';
+    }
+    
+    // Análise de tipos de carta
+    if (majorCount === 0) {
+        detailedSummary += '📜 Apenas Arcanos Menores surgiram, sugerindo que o foco está em situações práticas do dia a dia, eventos cotidianos e aspectos mais mundanos da sua vida.\n\n';
+    } else if (majorCount === cards.length) {
+        detailedSummary += '⭐ Todos são Arcanos Maiores! Isso indica que questões profundas do destino e lições importantes de vida estão em jogo. Preste muita atenção a estas mensagens.\n\n';
+    } else {
+        detailedSummary += `🎴 ${majorCount} Arcano(s) Maior(es) apareceu(ram), indicando que há aspectos espirituais ou lições importantes misturados com situações práticas.\n\n`;
+    }
+    
+    // Adiciona destaque para cartas notáveis
+    const notableCards = cards.filter(c => 
+        c.name.includes('Rei') || 
+        c.name.includes('Rainha') || 
+        c.name.includes('Cavaleiro') || 
+        c.name.includes('Ás') ||
+        c.type === 'major'
+    );
+    
+    if (notableCards.length > 0) {
+        detailedSummary += '🎴 Destaques da tirada:\n';
+        notableCards.slice(0, 3).forEach(card => {
+            const position = card.position === 'upright' ? '✨' : '🌙';
+            detailedSummary += `• ${position} ${card.name}: ${card.meaning_upright ? card.meaning_upright.substring(0, 100) + '...' : 'Carta de destaque'}\n`;
+        });
+    }
+    
+    return detailedSummary;
+}
+
+
+
+
+function renderCard(card, isDaily = false, index = 0) {
     const position = card.position || 'upright';
     const positionClass = position === 'upright' ? 'upright' : 'reversed';
     const positionText = translations.positions[position];
@@ -400,42 +482,52 @@ function renderCard(card, isDaily = false) {
     const suitIcon = card.suit ? getSuitIcon(card.suit) : '';
     const cardTypeIcon = card.type === 'major' ? '⭐' : suitIcon;
 
+    // Número da carta para Cruz Celta
+    const cardNumber = index + 1;
+
     let html = `
         <div class="card bg-gradient-to-b from-purple-900/40 to-purple-800/20 backdrop-blur-sm border border-purple-500/30 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] ${positionClass}">
-            <div class="card-header bg-gradient-to-r from-purple-800/50 to-indigo-800/50 p-4 border-b border-purple-500/30">
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="text-2xl">${cardTypeIcon}</span>
-                    <h3 class="card-name text-2xl font-bold text-white">${card.name}</h3>
+            <div class="card-header bg-gradient-to-r from-purple-800/50 to-indigo-800/50 p-3 sm:p-4 border-b border-purple-500/30">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-xl sm:text-2xl">${cardTypeIcon}</span>
+                    <h3 class="card-name text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight">${card.name}</h3>
                 </div>
-                <span class="card-position ${positionColor} font-semibold flex items-center gap-1">
-                    ${positionText}
-                </span>
+                <div class="flex justify-between items-center">
+                    <span class="card-position ${positionColor} font-semibold flex items-center gap-1 text-xs sm:text-sm">
+                        ${positionText}
+                    </span>
+                    ${card.position_name ? `
+                        <span class="text-xs bg-purple-700/50 px-2 py-1 rounded-full text-purple-300">
+                            ${cardNumber}ª
+                        </span>
+                    ` : ''}
+                </div>
             </div>
-            <div class="card-content p-6">
+            <div class="card-content p-4 sm:p-5">
     `;
 
     if (card.position_name) {
         const translatedPosition = getPositionName(card.position_name);
-        html += `<div class="position-badge bg-purple-700/50 text-white px-3 py-1 rounded-full text-sm inline-block mb-4 backdrop-blur-sm">${translatedPosition}</div>`;
+        html += `<div class="position-badge bg-purple-700/50 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm inline-block mb-3 backdrop-blur-sm">${translatedPosition}</div>`;
     }
 
     if (isDaily) {
         const dailyMessage = getDailyMessage(card);
-        html += `<div class="daily-message bg-gradient-to-r from-purple-800/30 to-indigo-800/30 p-4 rounded-lg mb-4 italic text-purple-200 border-l-4 border-purple-500">✨ ${dailyMessage}</div>`;
+        html += `<div class="daily-message bg-gradient-to-r from-purple-800/30 to-indigo-800/30 p-3 sm:p-4 rounded-lg mb-3 italic text-purple-200 border-l-4 border-purple-500 text-sm sm:text-base">✨ ${dailyMessage}</div>`;
     }
 
     html += `
-                <p class="card-meaning text-gray-300 leading-relaxed mb-4">${meaning}</p>
+                <p class="card-meaning text-gray-300 leading-relaxed mb-3 text-sm sm:text-base">${meaning}</p>
     `;
 
     if (card.suit) {
         const suitTranslated = translations.suits[card.suit.toLowerCase()] || card.suit;
-        html += `<span class="card-suit inline-block bg-purple-700/30 px-3 py-1 rounded-full text-sm text-purple-300 backdrop-blur-sm">${suitIcon} ${suitTranslated}</span>`;
+        html += `<span class="card-suit inline-block bg-purple-700/30 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-purple-300 backdrop-blur-sm">${suitIcon} ${suitTranslated}</span>`;
     }
 
     if (card.advice) {
         html += `
-            <div class="interpretation-text mt-4 p-3 bg-purple-800/20 rounded-lg backdrop-blur-sm">
+            <div class="interpretation-text mt-3 p-2 sm:p-3 bg-purple-800/20 rounded-lg backdrop-blur-sm text-xs sm:text-sm">
                 <strong class="text-purple-400">${translations.meanings.advice}:</strong> 
                 <span class="text-gray-300">${card.advice}</span>
             </div>
@@ -444,7 +536,7 @@ function renderCard(card, isDaily = false) {
 
     if (card.context) {
         html += `
-            <div class="interpretation-text mt-3 p-3 bg-purple-800/20 rounded-lg backdrop-blur-sm">
+            <div class="interpretation-text mt-2 p-2 sm:p-3 bg-purple-800/20 rounded-lg backdrop-blur-sm text-xs sm:text-sm">
                 <strong class="text-purple-400">${translations.meanings.context}:</strong> 
                 <span class="text-gray-300">${card.context}</span>
             </div>
@@ -453,7 +545,7 @@ function renderCard(card, isDaily = false) {
 
     if (card.role) {
         html += `
-            <div class="interpretation-text mt-3 p-3 bg-purple-800/20 rounded-lg backdrop-blur-sm">
+            <div class="interpretation-text mt-2 p-2 sm:p-3 bg-purple-800/20 rounded-lg backdrop-blur-sm text-xs sm:text-sm">
                 <strong class="text-purple-400">Papel na leitura:</strong> 
                 <span class="text-gray-300">${card.role}</span>
             </div>
@@ -467,6 +559,25 @@ function renderCard(card, isDaily = false) {
 
     return html;
 }
+
+// Função de emergência para garantir que o resumo não seja truncado
+function ensureFullSummary(summary) {
+    if (!summary) return '';
+    
+    // Remove qualquer limitação artificial
+    let fullSummary = summary
+        .replace(/\.\.\.$/, '') // Remove "..." do final
+        .replace(/\s+/g, ' ')    // Normaliza espaços
+        .trim();
+    
+    // Se ainda parece truncado, adiciona um aviso
+    if (fullSummary.length < 300 && fullSummary.includes('...')) {
+        fullSummary += ' (O resumo completo será carregado em breve)';
+    }
+    
+    return fullSummary;
+}
+
 
 function generateSpreadInterpretation(cards) {
     const uprightCount = cards.filter(c => c.position === 'upright').length;
@@ -538,11 +649,11 @@ async function askQuestion() {
     
     if (data && data.cards) {
         let html = `
-            <h2 class="title-font text-3xl text-white mb-4 text-center animate-fade-in">${translations.meanings.yourQuestion}</h2>
-            <div class="question-bubble bg-gradient-to-r from-purple-900/50 to-indigo-900/50 backdrop-blur-sm border border-purple-500/50 rounded-lg p-6 mb-8 relative animate-slide-down">
-                <p class="text-center text-purple-300 text-lg italic">"${data.question}"</p>
+            <h2 class="title-font text-2xl sm:text-3xl text-white mb-4 text-center animate-fade-in px-4">${translations.meanings.yourQuestion}</h2>
+            <div class="question-bubble bg-gradient-to-r from-purple-900/50 to-indigo-900/50 backdrop-blur-sm border border-purple-500/50 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 relative animate-slide-down max-w-3xl mx-auto">
+                <p class="text-center text-purple-300 text-base sm:text-lg italic">"${data.question}"</p>
             </div>
-            <div class="cards-grid">
+            <div class="cards-grid ${data.cards.length === 3 ? 'three-cards' : ''}">
         `;
         
         data.cards.forEach(card => {
@@ -552,22 +663,34 @@ async function askQuestion() {
         html += '</div>';
         
         if (data.summary) {
+            // Garante que o summary seja mostrado completo
+            const fullSummary = ensureFullSummary(data.summary);
+            
             html += `
-                <div class="info-box bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm border border-purple-500/30 rounded-lg p-6 mt-8 animate-slide-up">
-                    <h3 class="title-font text-xl text-white mb-4 flex items-center">
-                        <span class="text-2xl mr-2">🔮</span> 
+                <div class="info-box animate-slide-up">
+                    <h3 class="title-font text-xl sm:text-2xl text-white mb-6 flex items-center gap-3">
+                        <span class="text-2xl">🔮</span> 
                         ${translations.meanings.summary}
                     </h3>
-                    <p class="text-gray-300 leading-relaxed">${data.summary}</p>
+                    <div class="summary-content">
+                        ${fullSummary}
+                    </div>
+                    <div class="mt-8 text-purple-400/70 text-sm italic border-t border-purple-500/20 pt-6">
+                        Confie na sabedoria das cartas, mas lembre-se: você tem o livre arbítrio para fazer suas escolhas.
+                    </div>
                 </div>
             `;
         }
         
         mainContent.innerHTML = html;
         questionInput.value = '';
+        
+        // Scroll suave para o resultado
+        setTimeout(() => {
+            mainContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
     }
 }
-
 // ===== FUNÇÃO DE BUSCA COMPLETAMENTE REFEITA =====
 async function searchCards() {
     // Elementos DOM

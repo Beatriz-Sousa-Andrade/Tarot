@@ -311,91 +311,202 @@
     transform: translateX(5px);
 }
 
-/* Substitua a seção "Grid layouts" atual (linhas ~280-300) por: */
+/* style.css - CORREÇÕES DE TAMANHO E RESPONSIVIDADE */
+
+/* style.css - CORREÇÕES DE TAMANHO E RESPONSIVIDADE */
 
 /* Grid layouts - Versão Corrigida */
 .cards-grid {
     display: grid;
     gap: 1.5rem;
     margin-top: 2rem;
-    justify-content: center;
+    width: 100%;
 }
 
 /* Grid para 1 carta (Carta do Dia) */
 .cards-grid:has(> :nth-child(1):last-child) {
-    grid-template-columns: minmax(280px, 400px);
+    grid-template-columns: minmax(300px, 450px);
+    justify-content: center;
 }
 
 /* Grid para 2 cartas */
 .cards-grid:has(> :nth-child(2):last-child) {
-    grid-template-columns: repeat(2, minmax(260px, 350px));
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Grid para 3 cartas */
 .cards-grid:has(> :nth-child(3):last-child) {
-    grid-template-columns: repeat(3, minmax(240px, 320px));
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Grid para 4+ cartas (Cruz Celta) */
 .cards-grid:has(> :nth-child(n+4)) {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 350px));
+    justify-content: center;
 }
 
-/* Fallback para navegadores que não suportam :has() */
-@supports not (selector(:has(*))) {
-    .cards-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+/* Cards com altura fixa para conteúdo */
+.card {
+    height: auto;
+    min-height: 400px;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(30, 27, 45, 0.95), rgba(20, 18, 30, 0.98));
+    border: 1px solid rgba(147, 51, 234, 0.2);
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    animation: cardReveal 0.5s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-content {
+    flex: 1;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+/* Scrollbar personalizada para o conteúdo das cartas */
+.card-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.card-content::-webkit-scrollbar-track {
+    background: rgba(147, 51, 234, 0.1);
+    border-radius: 4px;
+}
+
+.card-content::-webkit-scrollbar-thumb {
+    background: rgba(147, 51, 234, 0.5);
+    border-radius: 4px;
+}
+
+/* Textos dentro das cartas */
+.card-meaning {
+    color: #d1d5db;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    flex-shrink: 0;
+}
+
+/* Daily message */
+.daily-message {
+    color: #c084fc;
+    font-size: 0.95rem;
+    text-align: left;
+    font-style: italic;
+    margin-bottom: 1rem;
+    padding: 0.875rem;
+    background: rgba(147, 51, 234, 0.15);
+    border-radius: 0.75rem;
+    border: 1px dashed rgba(147, 51, 234, 0.3);
+    line-height: 1.5;
+    word-wrap: break-word;
+    flex-shrink: 0;
+}
+
+/* Interpretation texts */
+.interpretation-text {
+    color: #9ca3af;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    padding: 0.875rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+    border-left: 3px solid #9333ea;
+    margin-top: 0.75rem;
+    word-wrap: break-word;
+    flex-shrink: 0;
+}
+
+/* Info Box (Resumo) - Ajuste fino */
+.info-box {
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.15), rgba(79, 70, 229, 0.15));
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+    margin: 2rem auto;
+    color: #e5e7eb;
+    line-height: 1.8;
+    max-width: 800px; /* Reduzido de 1000px para 800px */
+    width: 90%;
+    backdrop-filter: blur(10px);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+.summary-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: none;
+    height: auto;
+    overflow: visible;
+    color: #f3f4f6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    max-width: 95%; /* Garante que o texto não encoste nas bordas */
+    margin: 0 auto;
+}
+
+/* Container um pouco menor e com mais capacidade de texto */
+@media (min-width: 1280px) {
+    .info-box {
+        max-width: 900px; /* Reduzido de 1200px para 900px */
+        padding: 1.75rem 2.5rem;
     }
     
-    /* Classe específica para Carta do Dia */
-    .cards-grid.single-card {
-        display: flex;
-        justify-content: center;
-    }
-    
-    .cards-grid.single-card > * {
-        max-width: 400px;
-        width: 100%;
-    }
-    
-    /* Classe específica para 3 cartas */
-    .cards-grid.three-cards {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1.5rem;
-    }
-    
-    .cards-grid.three-cards > * {
-        flex: 0 1 300px;
-        min-width: 260px;
+    .summary-content {
+        font-size: 1.1rem; /* Mantido o mesmo tamanho */
+        line-height: 1.8;
+        max-width: 100%;
     }
 }
 
-/* Responsividade para tablets */
 @media (max-width: 768px) {
-    .cards-grid:has(> :nth-child(3):last-child) {
-        grid-template-columns: repeat(2, 1fr);
+    .info-box {
+        padding: 1.25rem 1.5rem;
+        width: 95%;
+        margin: 1.5rem auto;
+        max-width: 700px;
     }
     
-    .cards-grid:has(> :nth-child(3):last-child) > *:last-child {
-        grid-column: span 2;
-        max-width: 350px;
-        margin: 0 auto;
+    .summary-content {
+        font-size: 1rem;
+        line-height: 1.7;
     }
 }
 
-@media (max-width: 640px) {
-    .cards-grid:has(> :nth-child(2):last-child),
-    .cards-grid:has(> :nth-child(3):last-child) {
-        grid-template-columns: 1fr;
+@media (max-width: 480px) {
+    .info-box {
+        padding: 1rem 1.25rem;
+        width: 98%;
+        max-width: 100%;
     }
     
-    .cards-grid:has(> :nth-child(3):last-child) > *:last-child {
-        grid-column: auto;
+    .summary-content {
+        font-size: 0.95rem;
+        line-height: 1.6;
     }
 }
-
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
@@ -451,14 +562,74 @@
 }
 
 /* Info box */
+/* Info Box (Resumo) - CORREÇÃO DEFINITIVA */
 .info-box {
-    background: rgba(147, 51, 234, 0.1);
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.15), rgba(79, 70, 229, 0.15));
     border: 1px solid rgba(147, 51, 234, 0.3);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    margin: 1rem 0;
-    color: #d1d5db;
-    line-height: 1.6;
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+    margin: 2rem auto;
+    color: #e5e7eb;
+    line-height: 1.8;
+    max-width: 1000px;
+    width: 90%;
+    backdrop-filter: blur(10px);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+.summary-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap; /* Preserva quebras de linha e espaços */
+    word-break: break-word;
+    max-height: none; /* Remove qualquer limite de altura */
+    height: auto;
+    overflow: visible;
+    color: #f3f4f6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Para telas maiores */
+@media (min-width: 1280px) {
+    .info-box {
+        max-width: 1200px;
+        padding: 2rem 3rem;
+    }
+    
+    .summary-content {
+        font-size: 1.15rem;
+        line-height: 1.9;
+    }
+}
+
+@media (max-width: 768px) {
+    .info-box {
+        padding: 1.25rem 1.5rem;
+        width: 95%;
+        margin: 1.5rem auto;
+    }
+    
+    .summary-content {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+}
+
+@media (max-width: 480px) {
+    .info-box {
+        padding: 1rem 1.25rem;
+        width: 100%;
+    }
+    
+    .summary-content {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
 }
 
 /* Stats cards */
@@ -519,6 +690,8 @@
 .search-result-item:hover {
     transform: translateX(5px);
 }
+
+
 
 /* ===== CORREÇÕES DE RESPONSIVIDADE ===== */
 
